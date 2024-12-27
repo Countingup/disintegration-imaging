@@ -15,7 +15,6 @@ import (
 	"strings"
 
 	"golang.org/x/image/bmp"
-	"golang.org/x/image/tiff"
 )
 
 type fileSystem interface {
@@ -91,7 +90,6 @@ func Decode(r io.Reader, opts ...DecodeOption) (image.Image, error) {
 //
 //	// Load an image and transform it depending on the EXIF orientation tag (if present).
 //	img, err := imaging.Open("test.jpg", imaging.AutoOrientation(true))
-//
 func Open(filename string, opts ...DecodeOption) (image.Image, error) {
 	file, err := fs.Open(filename)
 	if err != nil {
@@ -109,7 +107,6 @@ const (
 	JPEG Format = iota
 	PNG
 	GIF
-	TIFF
 	BMP
 )
 
@@ -118,8 +115,6 @@ var formatExts = map[string]Format{
 	"jpeg": JPEG,
 	"png":  PNG,
 	"gif":  GIF,
-	"tif":  TIFF,
-	"tiff": TIFF,
 	"bmp":  BMP,
 }
 
@@ -127,7 +122,6 @@ var formatNames = map[Format]string{
 	JPEG: "JPEG",
 	PNG:  "PNG",
 	GIF:  "GIF",
-	TIFF: "TIFF",
 	BMP:  "BMP",
 }
 
@@ -139,7 +133,7 @@ func (f Format) String() string {
 var ErrUnsupportedFormat = errors.New("imaging: unsupported image format")
 
 // FormatFromExtension parses image format from filename extension:
-// "jpg" (or "jpeg"), "png", "gif", "tif" (or "tiff") and "bmp" are supported.
+// "jpg" (or "jpeg"), "png", "gif" and "bmp" are supported.
 func FormatFromExtension(ext string) (Format, error) {
 	if f, ok := formatExts[strings.ToLower(strings.TrimPrefix(ext, "."))]; ok {
 		return f, nil
@@ -148,7 +142,7 @@ func FormatFromExtension(ext string) (Format, error) {
 }
 
 // FormatFromFilename parses image format from filename:
-// "jpg" (or "jpeg"), "png", "gif", "tif" (or "tiff") and "bmp" are supported.
+// "jpg" (or "jpeg"), "png", "gif" and "bmp" are supported.
 func FormatFromFilename(filename string) (Format, error) {
 	ext := filepath.Ext(filename)
 	return FormatFromExtension(ext)
@@ -213,7 +207,7 @@ func PNGCompressionLevel(level png.CompressionLevel) EncodeOption {
 	}
 }
 
-// Encode writes the image img to w in the specified format (JPEG, PNG, GIF, TIFF or BMP).
+// Encode writes the image img to w in the specified format (JPEG, PNG, GIF or BMP).
 func Encode(w io.Writer, img image.Image, format Format, opts ...EncodeOption) error {
 	cfg := defaultEncodeConfig
 	for _, option := range opts {
@@ -243,9 +237,6 @@ func Encode(w io.Writer, img image.Image, format Format, opts ...EncodeOption) e
 			Drawer:    cfg.gifDrawer,
 		})
 
-	case TIFF:
-		return tiff.Encode(w, img, &tiff.Options{Compression: tiff.Deflate, Predictor: true})
-
 	case BMP:
 		return bmp.Encode(w, img)
 	}
@@ -255,7 +246,7 @@ func Encode(w io.Writer, img image.Image, format Format, opts ...EncodeOption) e
 
 // Save saves the image to file with the specified filename.
 // The format is determined from the filename extension:
-// "jpg" (or "jpeg"), "png", "gif", "tif" (or "tiff") and "bmp" are supported.
+// "jpg" (or "jpeg"), "png", "gif" and "bmp" are supported.
 //
 // Examples:
 //
@@ -264,7 +255,6 @@ func Encode(w io.Writer, img image.Image, format Format, opts ...EncodeOption) e
 //
 //	// Save the image as JPEG with optional quality parameter set to 80.
 //	err := imaging.Save(img, "out.jpg", imaging.JPEGQuality(80))
-//
 func Save(img image.Image, filename string, opts ...EncodeOption) (err error) {
 	f, err := FormatFromFilename(filename)
 	if err != nil {
