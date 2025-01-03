@@ -99,7 +99,7 @@ func TestOpenSave(t *testing.T) {
 	}
 	defer os.RemoveAll(dir)
 
-	for _, ext := range []string{"jpg", "jpeg", "png", "gif", "bmp", "tif", "tiff"} {
+	for _, ext := range []string{"jpg", "jpeg", "png", "gif", "bmp"} {
 		filename := filepath.Join(dir, "test."+ext)
 
 		img := imgWithoutAlpha
@@ -179,7 +179,6 @@ func TestFormats(t *testing.T) {
 		PNG:        "PNG",
 		GIF:        "GIF",
 		BMP:        "BMP",
-		TIFF:       "TIFF",
 		Format(-1): "",
 	}
 	for format, name := range formatNames {
