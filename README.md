@@ -12,9 +12,9 @@ as an input, and return a new image of `*image.NRGBA` type (32bit RGBA colors, n
 
 ## Installation
 
-    go get -u github.com/disintegration/imaging
+    go get -u github.com/Countingup/disintegration-imaging
 
-## Documentation
+## Original Repo Documentation
 
 https://pkg.go.dev/github.com/disintegration/imaging
 
@@ -156,7 +156,7 @@ img, err := imaging.Open("test.jpg", imaging.AutoOrientation(true))
 
 ### What's the difference between `imaging` and `gift` packages?
 
-[imaging](https://github.com/disintegration/imaging)
+[imaging](https://github.com/Countingup/disintegration-imaging)
 is designed to be a lightweight and simple image manipulation package.
 It provides basic image processing functions and a few helper functions
 such as `Open` and `Save`. It consistently returns *image.NRGBA image 
@@ -178,7 +178,7 @@ import (
 	"image/color"
 	"log"
 
-	"github.com/disintegration/imaging"
+	"github.com/Countingup/disintegration-imaging"
 )
 
 func main() {
